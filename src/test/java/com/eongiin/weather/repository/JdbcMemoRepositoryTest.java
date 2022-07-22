@@ -1,7 +1,6 @@
-package com.eongiin.weather;
+package com.eongiin.weather.repository;
 
 import com.eongiin.weather.domain.Memo;
-import com.eongiin.weather.repository.JdbcMemoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
