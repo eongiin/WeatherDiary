@@ -1,5 +1,6 @@
 package com.eongiin.weather.service;
 
+import com.eongiin.weather.WeatherApplication;
 import com.eongiin.weather.domain.DateWeather;
 import com.eongiin.weather.domain.Diary;
 import com.eongiin.weather.repository.DateWeatherRepository;
@@ -9,6 +10,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -34,9 +37,12 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final DateWeatherRepository dateWeatherRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherApplication.class);
+
     @Transactional
     @Scheduled(cron = "0 0 1 * * *")
     public void saveWeatherDate() {
+        logger.info("오늘도 날씨 데이터 잘 가져옴");
         dateWeatherRepository.save(getWeatherFromApi());
     }
 
@@ -58,6 +64,7 @@ public class DiaryService {
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void createDiary(LocalDate date, String text) {
+        logger.info("started to create diary");
         //날씨 데이터 가져오기 (API에서 가져오기 or DB에서 가져오기)
         DateWeather dateWeather = getDateWeather(date);
 
@@ -69,6 +76,7 @@ public class DiaryService {
                 .text(text)
                 .build()
         );
+        logger.info("end to create diary");
     }
 
     private DateWeather getDateWeather(LocalDate date) {
@@ -129,6 +137,7 @@ public class DiaryService {
     }
 
     public List<Diary> readDiary(LocalDate date) {
+        logger.debug("read diary");
         return diaryRepository.findAllByDate(date);
     }
 
